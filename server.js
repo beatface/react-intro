@@ -14,7 +14,9 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 
 app.get('/api/items', DatabaseModel.getItems)
-app.post('/api/items/:item/:completed', DatabaseModel.addItem)
+app.post('/api/items', DatabaseModel.addItem)
+app.post('/api/items/:id', DatabaseModel.updateItem)
+app.delete('/api/items/:id', DatabaseModel.removeItem)
 
 mongoose.connect(mongo_url)
 const database = mongoose.connection

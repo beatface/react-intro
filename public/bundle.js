@@ -24751,29 +24751,6 @@
 	var React = __webpack_require__(1);
 	var AddItem = __webpack_require__(219);
 	var List = __webpack_require__(218);
-	var allItems;
-	var request = new XMLHttpRequest();
-	request.open('GET', '/api/items', true);
-
-	request.onload = function () {
-	    if (request.status >= 200 && request.status < 400) {
-	        allItems = JSON.parse(request.responseText);
-	        allItems = allItems.map(function (todo) {
-	            return {
-	                item: todo.item,
-	                completed: todo.completed
-	            };
-	        });
-	        console.log(allItems);
-	    } else {
-	        console.log(request.status);
-	    }
-	};
-
-	request.onerror = function () {
-	    // There was a connection error of some sort
-	};
-	request.send();
 
 	var Main = React.createClass({
 	    displayName: 'Main',
@@ -24781,12 +24758,22 @@
 	    getInitialState: function getInitialState() {
 	        return { items: [] };
 	    },
-	    updateItems: function updateItems() {
-
-	        this.setState({ items: allItems });
+	    componentDidMount: function componentDidMount() {
+	        this.loadItems();
+	    },
+	    loadItems: function loadItems() {
+	        $.ajax({
+	            url: '/api/items',
+	            method: 'GET',
+	            success: function (data, status) {
+	                this.setState({ items: data });
+	            }.bind(this),
+	            error: function (xhr, status, err) {
+	                console.log(xhr, status, err);
+	            }.bind(this)
+	        });
 	    },
 	    render: function render() {
-	        console.log("main.js, line 14", this.props);
 	        return React.createElement(
 	            'div',
 	            { className: 'main-container' },
@@ -24802,8 +24789,8 @@
 	            React.createElement(
 	                'div',
 	                { className: 'container' },
-	                React.createElement(AddItem, { onSubmit: this.updateItems }),
-	                React.createElement(List, { items: this.state.items })
+	                React.createElement(AddItem, { onSubmit: this.loadItems }),
+	                React.createElement(List, { onChange: this.loadItems, items: this.state.items })
 	            )
 	        );
 	    }
@@ -24819,19 +24806,14 @@
 
 	var React = __webpack_require__(1);
 	var Item = __webpack_require__(220);
-	// const ReactDOM = require('react-dom');
 
 	var List = React.createClass({
 	    displayName: 'List',
 
 	    render: function render() {
-	        var createItem = function createItem(itemText) {
-	            return React.createElement(
-	                Item,
-	                null,
-	                itemText
-	            );
-	        };
+	        var createItem = function (item) {
+	            return React.createElement(Item, { key: item._id, item: item.item, itemId: item._id, status: item.completed, onUpdate: this.props.onChange });
+	        }.bind(this);
 	        return React.createElement(
 	            'ul',
 	            null,
@@ -24861,25 +24843,14 @@
 	        if (event.keyCode !== 13) {
 	            return;
 	        }
-	        var request = new XMLHttpRequest();
-	        request.open('POST', '/api/items/' + this.state.item + '/' + false, true);
-
-	        request.onload = function () {
-	            if (request.status >= 200 && request.status < 400) {
-	                var res = request.responseText;
-	                console.log(res);
-	            } else {
-	                console.log(request.status);
-	            }
-	        };
-
-	        request.onerror = function () {
-	            // There was a connection error of some sort
-	        };
-	        request.send();
+	        $.ajax({
+	            url: '/api/items',
+	            contentType: "application/json",
+	            method: 'POST',
+	            data: JSON.stringify({ item: this.state.item, completed: false })
+	        });
 	        this.props.onSubmit();
 	        this.setState({ item: '' });
-	        ReactDOM.findDOMNode(this.refs.item).focus();
 	        return;
 	    },
 	    onChange: function onChange(event) {
@@ -24918,18 +24889,74 @@
 	'use strict';
 
 	var React = __webpack_require__(1);
-	// const ReactDOM = require('react-dom')
 
 	var Item = React.createClass({
-		displayName: 'Item',
+	    displayName: 'Item',
 
-		render: function render() {
-			return React.createElement(
-				'li',
-				null,
-				this.props.children
-			);
-		}
+	    updateStatus: function updateStatus() {
+	        $.ajax({
+	            url: '/api/items/' + this.props.itemId,
+	            contentType: "application/json",
+	            method: 'POST',
+	            data: JSON.stringify({ item: this.props.item, completed: !this.props.status })
+	        });
+	        this.props.onUpdate();
+	        return;
+	    },
+	    deleteItem: function deleteItem() {
+	        $.ajax({
+	            url: '/api/items/' + this.props.itemId,
+	            contentType: "application/json",
+	            method: 'DELETE',
+	            success: function success(res) {
+	                console.log(res);
+	            }
+	        });
+	        this.props.onUpdate();
+	        return;
+	    },
+	    render: function render() {
+	        if (this.props.status === false) {
+	            return React.createElement(
+	                'li',
+	                { className: 'list-group-item' },
+	                React.createElement(
+	                    'div',
+	                    null,
+	                    this.props.item
+	                ),
+	                React.createElement(
+	                    'button',
+	                    { type: 'button', className: 'btn btn-info', onClick: this.updateStatus },
+	                    React.createElement('span', { className: 'glyphicon glyphicon-ok', 'aria-hidden': 'true' })
+	                )
+	            );
+	        } else {
+	            return React.createElement(
+	                'li',
+	                { className: 'list-group-item' },
+	                React.createElement(
+	                    'div',
+	                    null,
+	                    React.createElement(
+	                        'strike',
+	                        null,
+	                        this.props.item
+	                    )
+	                ),
+	                React.createElement(
+	                    'button',
+	                    { type: 'button', className: 'btn btn-success', onClick: this.updateStatus },
+	                    React.createElement('span', { className: 'glyphicon glyphicon-plus', 'aria-hidden': 'true' })
+	                ),
+	                React.createElement(
+	                    'button',
+	                    { type: 'button', className: 'btn btn-danger', onClick: this.deleteItem },
+	                    React.createElement('span', { className: 'glyphicon glyphicon-remove', 'aria-hidden': 'true' })
+	                )
+	            );
+	        }
+	    }
 	});
 
 	module.exports = Item;

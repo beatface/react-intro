@@ -1,40 +1,29 @@
+'use strict';
+
 const React = require('react')
 const AddItem = require('../components/AddItem')
 const List = require('../components/List')
-var allItems;
-var request = new XMLHttpRequest();
-request.open('GET', `/api/items`, true);
-
-request.onload = function() {
-  if (request.status >= 200 && request.status < 400) {
-    allItems = JSON.parse(request.responseText)
-    allItems = allItems.map((todo) => {
-        return {
-            item: todo.item,
-            completed: todo.completed
-        }
-    })
-    console.log(allItems);
-  } else {
-    console.log(request.status)
-  }
-};
-
-request.onerror = function() {
-  // There was a connection error of some sort
-};
-request.send();
 
 const Main = React.createClass({
     getInitialState: function(){
         return {items: []}
     },
-    updateItems: function() {
-
-        this.setState({items: allItems})
+    componentDidMount: function() {
+        this.loadItems()
+    },
+    loadItems: function () {
+        $.ajax({
+            url: `/api/items`,
+            method: 'GET',
+            success: function (data, status) {
+                this.setState({items: data})
+            }.bind(this),
+            error: function(xhr, status, err) {
+                console.log(xhr, status, err);
+            }.bind(this)
+        })
     },
     render: function() {
-        console.log("main.js, line 14", this.props)
         return (
             <div className="main-container">
                 <nav className="navbar navbar-default" role="navigation">
@@ -43,8 +32,8 @@ const Main = React.createClass({
                     </div>
                 </nav>
                 <div className="container">
-                    <AddItem onSubmit={this.updateItems} />
-                    <List items={this.state.items} />
+                    <AddItem onSubmit={this.loadItems} />
+                    <List onChange={this.loadItems} items={this.state.items} />
                 </div>
             </div>
         )

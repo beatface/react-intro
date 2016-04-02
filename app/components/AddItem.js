@@ -9,25 +9,14 @@ const AddItem = React.createClass({
 		if (event.keyCode !== 13) {
 			return;
 		}
-        var request = new XMLHttpRequest();
-        request.open('POST', `/api/items/${this.state.item}/${false}`, true);
-
-        request.onload = function() {
-          if (request.status >= 200 && request.status < 400) {
-            var res = request.responseText;
-            console.log(res);
-          } else {
-            console.log(request.status);
-          }
-        };
-
-        request.onerror = function() {
-          // There was a connection error of some sort
-        };
-        request.send();
-        this.props.onSubmit();
-        this.setState({item: ''});
-        ReactDOM.findDOMNode(this.refs.item).focus();
+        $.ajax({
+            url: `/api/items`,
+            contentType: "application/json",
+            method: 'POST',
+            data: JSON.stringify({item: this.state.item, completed: false})
+        })
+        this.props.onSubmit()
+        this.setState({item: ''})
         return;
     },
     onChange: function(event){
