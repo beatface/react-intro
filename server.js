@@ -3,22 +3,24 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const path = require('path')
+const mongoose = require('mongoose')
 const app = express()
+const DatabaseModel = require('./models/list.model')
+
+const mongo_url = 'mongodb://localhost:27017/react-intro'
 
 app.use('/', express.static(path.join(__dirname, 'public')))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 
-app.get('/api/todo', (req, res) => {
-    console.log(req.body)
-    res.send('trying to get the notes')
-})
+app.get('/api/items', DatabaseModel.getItems)
+app.post('/api/items/:item/:completed', DatabaseModel.addItem)
 
-app.post('/api/todo', (req, res) => {
-    console.log(req.body)
-    res.send('trying to send the notes')
-})
-
-app.listen(3000, () => {
-    console.log('Listening on port 3000!');
+mongoose.connect(mongo_url)
+const database = mongoose.connection
+database.on('open', (err) => {
+    if (err) throw err;
+    app.listen(3000, () => {
+        console.log('Listening on port 3000!')
+    })
 })

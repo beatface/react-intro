@@ -1,13 +1,36 @@
 const React = require('react')
 const AddItem = require('../components/AddItem')
 const List = require('../components/List')
+var allItems;
+var request = new XMLHttpRequest();
+request.open('GET', `/api/items`, true);
+
+request.onload = function() {
+  if (request.status >= 200 && request.status < 400) {
+    allItems = JSON.parse(request.responseText)
+    allItems = allItems.map((todo) => {
+        return {
+            item: todo.item,
+            completed: todo.completed
+        }
+    })
+    console.log(allItems);
+  } else {
+    console.log(request.status)
+  }
+};
+
+request.onerror = function() {
+  // There was a connection error of some sort
+};
+request.send();
 
 const Main = React.createClass({
     getInitialState: function(){
-		return {items: []};
-	},
-    updateItems: function(newItem) {
-        var allItems = this.state.items.concat([newItem])
+        return {items: []}
+    },
+    updateItems: function() {
+
         this.setState({items: allItems})
     },
     render: function() {

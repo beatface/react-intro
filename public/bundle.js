@@ -24733,10 +24733,14 @@
 
 	var React = __webpack_require__(1);
 	var Main = __webpack_require__(217);
+	// const List = require('../components/List')
 	var Router = __webpack_require__(159);
 	var Route = Router.Route;
+	// const IndexRoute = Router.IndexRoute
 
 	module.exports = React.createElement(Route, { path: '/', component: Main });
+
+	// <IndexRoute component={List}/>
 
 /***/ },
 /* 217 */
@@ -24747,6 +24751,29 @@
 	var React = __webpack_require__(1);
 	var AddItem = __webpack_require__(219);
 	var List = __webpack_require__(218);
+	var allItems;
+	var request = new XMLHttpRequest();
+	request.open('GET', '/api/items', true);
+
+	request.onload = function () {
+	    if (request.status >= 200 && request.status < 400) {
+	        allItems = JSON.parse(request.responseText);
+	        allItems = allItems.map(function (todo) {
+	            return {
+	                item: todo.item,
+	                completed: todo.completed
+	            };
+	        });
+	        console.log(allItems);
+	    } else {
+	        console.log(request.status);
+	    }
+	};
+
+	request.onerror = function () {
+	    // There was a connection error of some sort
+	};
+	request.send();
 
 	var Main = React.createClass({
 	    displayName: 'Main',
@@ -24754,8 +24781,8 @@
 	    getInitialState: function getInitialState() {
 	        return { items: [] };
 	    },
-	    updateItems: function updateItems(newItem) {
-	        var allItems = this.state.items.concat([newItem]);
+	    updateItems: function updateItems() {
+
 	        this.setState({ items: allItems });
 	    },
 	    render: function render() {
@@ -24834,8 +24861,23 @@
 	        if (event.keyCode !== 13) {
 	            return;
 	        }
-	        event.preventDefault();
-	        this.props.onSubmit(this.state.item);
+	        var request = new XMLHttpRequest();
+	        request.open('POST', '/api/items/' + this.state.item + '/' + false, true);
+
+	        request.onload = function () {
+	            if (request.status >= 200 && request.status < 400) {
+	                var res = request.responseText;
+	                console.log(res);
+	            } else {
+	                console.log(request.status);
+	            }
+	        };
+
+	        request.onerror = function () {
+	            // There was a connection error of some sort
+	        };
+	        request.send();
+	        this.props.onSubmit();
 	        this.setState({ item: '' });
 	        ReactDOM.findDOMNode(this.refs.item).focus();
 	        return;

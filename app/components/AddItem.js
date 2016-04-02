@@ -9,8 +9,23 @@ const AddItem = React.createClass({
 		if (event.keyCode !== 13) {
 			return;
 		}
-        event.preventDefault();
-        this.props.onSubmit(this.state.item);
+        var request = new XMLHttpRequest();
+        request.open('POST', `/api/items/${this.state.item}/${false}`, true);
+
+        request.onload = function() {
+          if (request.status >= 200 && request.status < 400) {
+            var res = request.responseText;
+            console.log(res);
+          } else {
+            console.log(request.status);
+          }
+        };
+
+        request.onerror = function() {
+          // There was a connection error of some sort
+        };
+        request.send();
+        this.props.onSubmit();
         this.setState({item: ''});
         ReactDOM.findDOMNode(this.refs.item).focus();
         return;
