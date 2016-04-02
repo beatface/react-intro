@@ -24782,7 +24782,7 @@
 	                { className: 'navbar navbar-default', role: 'navigation' },
 	                React.createElement(
 	                    'div',
-	                    { className: 'col-sm-7 col-sm-offset-2', style: { marginTop: 15 } },
+	                    { className: 'col-sm-7 col-sm-offset-5', style: { marginTop: 12 } },
 	                    'React To Dos'
 	                )
 	            ),
@@ -24922,13 +24922,21 @@
 	                { className: 'list-group-item' },
 	                React.createElement(
 	                    'div',
-	                    null,
-	                    this.props.item
+	                    { className: 'col-sm-9' },
+	                    React.createElement(
+	                        'p',
+	                        null,
+	                        this.props.item
+	                    )
 	                ),
 	                React.createElement(
-	                    'button',
-	                    { type: 'button', className: 'btn btn-info', onClick: this.updateStatus },
-	                    React.createElement('span', { className: 'glyphicon glyphicon-ok', 'aria-hidden': 'true' })
+	                    'div',
+	                    { className: 'col-sm-3' },
+	                    React.createElement(
+	                        'button',
+	                        { type: 'button', className: 'btn btn-info', onClick: this.updateStatus },
+	                        React.createElement('span', { className: 'glyphicon glyphicon-ok', 'aria-hidden': 'true' })
+	                    )
 	                )
 	            );
 	        } else {
@@ -24937,22 +24945,30 @@
 	                { className: 'list-group-item' },
 	                React.createElement(
 	                    'div',
-	                    null,
+	                    { className: 'col-sm-9' },
 	                    React.createElement(
-	                        'strike',
+	                        'p',
 	                        null,
-	                        this.props.item
+	                        React.createElement(
+	                            'strike',
+	                            null,
+	                            this.props.item
+	                        )
 	                    )
 	                ),
 	                React.createElement(
-	                    'button',
-	                    { type: 'button', className: 'btn btn-success', onClick: this.updateStatus },
-	                    React.createElement('span', { className: 'glyphicon glyphicon-plus', 'aria-hidden': 'true' })
-	                ),
-	                React.createElement(
-	                    'button',
-	                    { type: 'button', className: 'btn btn-danger', onClick: this.deleteItem },
-	                    React.createElement('span', { className: 'glyphicon glyphicon-remove', 'aria-hidden': 'true' })
+	                    'div',
+	                    { className: 'col-sm-3' },
+	                    React.createElement(
+	                        'button',
+	                        { type: 'button', className: 'btn btn-success', onClick: this.updateStatus },
+	                        React.createElement('span', { className: 'glyphicon glyphicon-plus', 'aria-hidden': 'true' })
+	                    ),
+	                    React.createElement(
+	                        'button',
+	                        { type: 'button', className: 'btn btn-danger', onClick: this.deleteItem },
+	                        React.createElement('span', { className: 'glyphicon glyphicon-remove', 'aria-hidden': 'true' })
+	                    )
 	                )
 	            );
 	        }

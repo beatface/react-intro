@@ -27,22 +27,30 @@ const Item = React.createClass({
         if (this.props.status === false) {
     		return (
                 <li className='list-group-item'>
-                    <div>{this.props.item}</div>
-                    <button type="button" className="btn btn-info" onClick={this.updateStatus}>
-                        <span className="glyphicon glyphicon-ok" aria-hidden="true"></span>
-                    </button>
+                    <div className='col-sm-9'>
+                        <p>{this.props.item}</p>
+                    </div>
+                    <div className='col-sm-3'>
+                        <button type="button" className="btn btn-info" onClick={this.updateStatus}>
+                            <span className="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                        </button>
+                    </div>
                 </li>
     		)
         } else {
             return (
                 <li className='list-group-item'>
-                    <div><strike>{this.props.item}</strike></div>
-                    <button type="button" className="btn btn-success" onClick={this.updateStatus}>
-                        <span className="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                    </button>
-                    <button type="button" className="btn btn-danger" onClick={this.deleteItem}>
-                        <span className="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                    </button>
+                    <div className='col-sm-9'>
+                        <p><strike>{this.props.item}</strike></p>
+                    </div>
+                    <div className='col-sm-3'>
+                        <button type="button" className="btn btn-success" onClick={this.updateStatus}>
+                            <span className="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" className="btn btn-danger" onClick={this.deleteItem}>
+                            <span className="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        </button>
+                    </div>
                 </li>
             )
         }

@@ -1,0 +1,49 @@
+body {
+    font-family: 'Open Sans', sans-serif;
+}
+.navbar {
+    border-radius: 0;
+    border: none;
+}
+.navbar div {
+    color: white;
+    font-size: 1.3em;
+    text-shadow: 1px 1px 1px rgba(100, 100, 100, 1);
+}
+.navbar-default {
+    background-color: #b1a1a1;
+}
+.container {
+    width: 50%;
+}
+p {
+    margin: 7px 0 0 0;
+}
+ul {
+    padding: 0;
+}
+li {
+    height: 4em;
+}
+li > div {
+    display: inline;
+}
+.col-sm-3 {
+    text-align: center;
+}
+.col-sm-3 button {
+    border-radius: 0;
+}
+.input-group-addon,
+#basic-url {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom: 0;
+}
+.list-group-item:first-child {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+ul li:nth-child(2n+1) {
+    background-color: rgba(224,192,83, 0.1);
+}
