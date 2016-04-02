@@ -7,7 +7,12 @@ const mongoose = require('mongoose')
 const app = express()
 const DatabaseModel = require('./models/list.model')
 
-const mongo_url = 'mongodb://localhost:27017/react-intro'
+// Connection URL
+if (process.env.NODE_ENV === "production") {
+	var mongo_url = `mongodb://${process.env.MONGODB_USER}:${process.env.MONGODB_PW}@${process.env.MONGODB_URL}:${process.env.MONGODB_PORT}/react-intro`;
+} else {
+	var mongo_url = 'mongodb://localhost:27017/react-intro';
+}
 
 app.use('/', express.static(path.join(__dirname, 'public')))
 app.use(bodyParser.json())
