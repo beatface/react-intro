@@ -7,6 +7,7 @@ const mongoose = require('mongoose')
 const app = express()
 const DatabaseModel = require('./models/list.model')
 
+const PORT = process.env.PORT || 3000;
 // Connection URL
 if (process.env.NODE_ENV === "production") {
 	var mongo_url = `mongodb://${process.env.MONGODB_USER}:${process.env.MONGODB_PW}@${process.env.MONGODB_URL}:${process.env.MONGODB_PORT}/react-intro`;
@@ -27,7 +28,7 @@ mongoose.connect(mongo_url)
 const database = mongoose.connection
 database.on('open', (err) => {
     if (err) throw err;
-    app.listen(3000, () => {
+    app.listen(PORT, () => {
         console.log('Listening on port 3000!')
     })
 })
