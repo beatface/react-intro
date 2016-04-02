@@ -1,0 +1,21 @@
+{
+  "name": "react-intro",
+  "description": "",
+  "main": "index.js",
+  "authors": [
+    "“Emma <“emma.beaton@gmail.com”>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/beatface/react-intro",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.6"
+  }
+}
