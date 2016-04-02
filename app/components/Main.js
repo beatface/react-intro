@@ -1,15 +1,17 @@
-const React = require('react');
+const React = require('react')
+const AddItem = require('../components/AddItem')
+const List = require('../components/List')
 
 const Main = React.createClass({
-    getInitalState: {
-        items: []
-    },
+    getInitialState: function(){
+		return {items: []};
+	},
     updateItems: function(newItem) {
         var allItems = this.state.items.concat([newItem])
         this.setState({items: allItems})
-    }
+    },
     render: function() {
-        console.log(this.props)
+        console.log("main.js, line 14", this.props)
         return (
             <div className="main-container">
                 <nav className="navbar navbar-default" role="navigation">
@@ -18,15 +20,12 @@ const Main = React.createClass({
                     </div>
                 </nav>
                 <div className="container">
-                    <div className="input-group">
-                        <span className="input-group-addon" id="basic-addon3" autofocus="true">What do you need to do?</span>
-                        <input type="text" className="form-control" id="basic-url" aria-describedby="basic-addon3"/>
-                    </div>
-                    {this.props.children}
+                    <AddItem onSubmit={this.updateItems} />
+                    <List items={this.state.items} />
                 </div>
             </div>
         )
     }
-});
+})
 
-module.exports = Main;
+module.exports = Main

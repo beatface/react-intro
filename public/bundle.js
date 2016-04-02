@@ -24732,21 +24732,91 @@
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var Main = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../components/Main\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
-	var List = __webpack_require__(218);
+	var Main = __webpack_require__(217);
 	var Router = __webpack_require__(159);
 	var Route = Router.Route;
-	var IndexRoute = Router.IndexRoute;
 
-	module.exports = React.createElement(
-	    Route,
-	    { path: '/', component: Main },
-	    React.createElement(IndexRoute, { component: List })
-	);
+	module.exports = React.createElement(Route, { path: '/', component: Main });
 
 /***/ },
-/* 217 */,
+/* 217 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+	var AddItem = __webpack_require__(219);
+	var List = __webpack_require__(218);
+
+	var Main = React.createClass({
+	    displayName: 'Main',
+
+	    getInitialState: function getInitialState() {
+	        return { items: [] };
+	    },
+	    updateItems: function updateItems(newItem) {
+	        var allItems = this.state.items.concat([newItem]);
+	        this.setState({ items: allItems });
+	    },
+	    render: function render() {
+	        console.log("main.js, line 14", this.props);
+	        return React.createElement(
+	            'div',
+	            { className: 'main-container' },
+	            React.createElement(
+	                'nav',
+	                { className: 'navbar navbar-default', role: 'navigation' },
+	                React.createElement(
+	                    'div',
+	                    { className: 'col-sm-7 col-sm-offset-2', style: { marginTop: 15 } },
+	                    'React To Dos'
+	                )
+	            ),
+	            React.createElement(
+	                'div',
+	                { className: 'container' },
+	                React.createElement(AddItem, { onSubmit: this.updateItems }),
+	                React.createElement(List, { items: this.state.items })
+	            )
+	        );
+	    }
+	});
+
+	module.exports = Main;
+
+/***/ },
 /* 218 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+	var Item = __webpack_require__(220);
+	// const ReactDOM = require('react-dom');
+
+	var List = React.createClass({
+	    displayName: 'List',
+
+	    render: function render() {
+	        var createItem = function createItem(itemText) {
+	            return React.createElement(
+	                Item,
+	                null,
+	                itemText
+	            );
+	        };
+	        return React.createElement(
+	            'ul',
+	            null,
+	            this.props.items.map(createItem)
+	        );
+	    }
+	});
+
+	module.exports = List;
+
+/***/ },
+/* 219 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24754,23 +24824,73 @@
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(158);
 
-	var List = React.createClass({
-	    displayName: 'List',
+	var AddItem = React.createClass({
+	    displayName: 'AddItem',
 
+	    getInitialState: function getInitialState() {
+	        return { item: '' };
+	    },
+	    handleKeyDown: function handleKeyDown(event) {
+	        if (event.keyCode !== 13) {
+	            return;
+	        }
+	        event.preventDefault();
+	        this.props.onSubmit(this.state.item);
+	        this.setState({ item: '' });
+	        ReactDOM.findDOMNode(this.refs.item).focus();
+	        return;
+	    },
+	    onChange: function onChange(event) {
+	        this.setState({
+	            item: event.target.value
+	        });
+	    },
 	    render: function render() {
 	        return React.createElement(
-	            'ul',
-	            null,
+	            'div',
+	            { className: 'input-group' },
 	            React.createElement(
-	                'li',
-	                null,
-	                'A list item'
-	            )
+	                'span',
+	                { className: 'input-group-addon', id: 'basic-addon3', autofocus: 'true' },
+	                'What do you need to do?'
+	            ),
+	            React.createElement('input', {
+	                type: 'text',
+	                className: 'form-control',
+	                id: 'basic-url',
+	                'aria-describedby': 'basic-addon3',
+	                onChange: this.onChange,
+	                onKeyDown: this.handleKeyDown,
+	                value: this.state.item
+	            })
 	        );
 	    }
 	});
 
-	module.exports = List;
+	module.exports = AddItem;
+
+/***/ },
+/* 220 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+	// const ReactDOM = require('react-dom')
+
+	var Item = React.createClass({
+		displayName: 'Item',
+
+		render: function render() {
+			return React.createElement(
+				'li',
+				null,
+				this.props.children
+			);
+		}
+	});
+
+	module.exports = Item;
 
 /***/ }
 /******/ ]);
