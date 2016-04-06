@@ -24733,14 +24733,11 @@
 
 	var React = __webpack_require__(1);
 	var Main = __webpack_require__(217);
-	// const List = require('../components/List')
 	var Router = __webpack_require__(159);
 	var Route = Router.Route;
-	// const IndexRoute = Router.IndexRoute
+	var IndexRoute = Router.IndexRoute;
 
 	module.exports = React.createElement(Route, { path: '/', component: Main });
-
-	// <IndexRoute component={List}/>
 
 /***/ },
 /* 217 */
@@ -24749,8 +24746,8 @@
 	'use strict';
 
 	var React = __webpack_require__(1);
-	var AddItem = __webpack_require__(219);
-	var List = __webpack_require__(218);
+	var AddItem = __webpack_require__(218);
+	var List = __webpack_require__(219);
 
 	var Main = React.createClass({
 	    displayName: 'Main',
@@ -24774,6 +24771,12 @@
 	        });
 	    },
 	    render: function render() {
+	        var completeItems = this.state.items.filter(function (item) {
+	            return item.completed;
+	        });
+	        var incompleteItems = this.state.items.filter(function (item) {
+	            return !item.completed;
+	        });
 	        return React.createElement(
 	            'div',
 	            { className: 'main-container' },
@@ -24790,7 +24793,18 @@
 	                'div',
 	                { className: 'container' },
 	                React.createElement(AddItem, { onSubmit: this.loadItems }),
-	                React.createElement(List, { onChange: this.loadItems, items: this.state.items })
+	                React.createElement(
+	                    'h1',
+	                    null,
+	                    incompleteItems.length > 0 ? 'To Do' : ''
+	                ),
+	                React.createElement(List, { onChange: this.loadItems, items: incompleteItems }),
+	                React.createElement(
+	                    'h1',
+	                    null,
+	                    completeItems.length > 0 ? 'To Done' : ''
+	                ),
+	                React.createElement(List, { onChange: this.loadItems, items: completeItems })
 	            )
 	        );
 	    }
@@ -24800,32 +24814,6 @@
 
 /***/ },
 /* 218 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var React = __webpack_require__(1);
-	var Item = __webpack_require__(220);
-
-	var List = React.createClass({
-	    displayName: 'List',
-
-	    render: function render() {
-	        var createItem = function (item) {
-	            return React.createElement(Item, { key: item._id, item: item.item, itemId: item._id, status: item.completed, onUpdate: this.props.onChange });
-	        }.bind(this);
-	        return React.createElement(
-	            'ul',
-	            null,
-	            this.props.items.map(createItem)
-	        );
-	    }
-	});
-
-	module.exports = List;
-
-/***/ },
-/* 219 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24881,6 +24869,32 @@
 	});
 
 	module.exports = AddItem;
+
+/***/ },
+/* 219 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+	var Item = __webpack_require__(220);
+
+	var List = React.createClass({
+	    displayName: 'List',
+
+	    render: function render() {
+	        var createItem = function (item) {
+	            return React.createElement(Item, { key: item._id, item: item.item, itemId: item._id, status: item.completed, onUpdate: this.props.onChange });
+	        }.bind(this);
+	        return React.createElement(
+	            'ul',
+	            null,
+	            this.props.items.map(createItem)
+	        );
+	    }
+	});
+
+	module.exports = List;
 
 /***/ },
 /* 220 */

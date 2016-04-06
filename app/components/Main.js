@@ -24,6 +24,12 @@ const Main = React.createClass({
         })
     },
     render: function() {
+        const completeItems = this.state.items.filter(function(item) {
+            return item.completed
+        })
+        const incompleteItems = this.state.items.filter(function(item){
+            return !item.completed
+        })
         return (
             <div className="main-container">
                 <nav className="navbar navbar-default" role="navigation">
@@ -33,7 +39,10 @@ const Main = React.createClass({
                 </nav>
                 <div className="container">
                     <AddItem onSubmit={this.loadItems} />
-                    <List onChange={this.loadItems} items={this.state.items} />
+                    <h1>{incompleteItems.length > 0 ? 'To Do' : ''}</h1>
+                    <List onChange={this.loadItems} items={incompleteItems} />
+                    <h1>{completeItems.length > 0 ? 'To Done' : ''}</h1>
+                    <List onChange={this.loadItems} items={completeItems} />
                 </div>
             </div>
         )
